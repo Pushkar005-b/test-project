@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign In — JISSP Portal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>JISSP Student Portal</h1>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="calendar.html">Calendar</a>
+      <a href="clubs.html">Clubs</a>
+      <a href="gallery.html">Gallery</a>
+      <a class="active" href="signin.html">Sign In</a>
+      <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card form-card">
+      <h2>Sign in to your account</h2>
+      <form id="signinForm" action="#" method="post" novalidate>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@example.edu" required>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" required minlength="6">
+
+        <div class="form-row">
+          <label><input type="checkbox" name="remember"> Remember me</label>
+        </div>
+
+        <button type="submit" class="btn">Sign In</button>
+      </form>
+      <p class="muted">Don't have an account? <a href="index.html">Contact admin</a></p>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('signinForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      if (!email || password.length < 6) {
+        Toast.error('Please enter a valid email and password (min 6 chars).');
+        return;
+      }
+      Toast.success('Signed in successfully!');
+    });
+  </script>
+  <script src="utils.js"></script>
+</body>
+</html>

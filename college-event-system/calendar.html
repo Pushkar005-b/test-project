@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calendar — JISSP Events</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>JISSP Events</h1>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a class="active" href="calendar.html">Calendar</a>
+      <a href="clubs.html">Clubs</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="signin.html">Sign In</a>
+      <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Event Calendar</h2>
+      <div class="search-wrapper">
+        <input type="text" id="searchCalendar" class="search-input" placeholder="🔍 Search events...">
+      </div>
+        <button id="prevBtn" class="btn small">◀</button>
+        <h2 id="monthYear"></h2>
+        <button id="nextBtn" class="btn small">▶</button>
+      </div>
+      <table id="calendar" class="calendar"></table>
+    </section>
+  </main>
+
+  <script>
+    const calendarEl = document.getElementById('calendar');
+    const monthYearEl = document.getElementById('monthYear');
+    let current = new Date();
+
+    function renderCalendar(date) {
+      calendarEl.innerHTML = '';
+      const year = date.getFullYear();
+      const month = date.getMonth();
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      monthYearEl.textContent = date.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+
+      const headerRow = document.createElement('tr');
+      ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+        const th = document.createElement('th'); th.textContent = d; headerRow.appendChild(th);
+      });
+      calendarEl.appendChild(headerRow);
+
+      let row = document.createElement('tr');
+      for (let i=0;i<firstDay;i++) {
+        row.appendChild(document.createElement('td'));
+      }
+      for (let day=1; day<=daysInMonth; day++) {
+        if (row.children.length === 7) { calendarEl.appendChild(row); row = document.createElement('tr'); }
+        const td = document.createElement('td');
+        td.textContent = day;
+        // simple demo: mark 10th as sample event
+        if (day === 10) {
+          const evt = document.createElement('div'); evt.className = 'event'; evt.textContent = 'Sample Event';
+          td.appendChild(evt);
+        }
+        row.appendChild(td);
+      }
+      while (row.children.length < 7) row.appendChild(document.createElement('td'));
+      calendarEl.appendChild(row);
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      current.setMonth(current.getMonth() - 1);
+      renderCalendar(current);
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      current.setMonth(current.getMonth() + 1);
+      renderCalendar(current);
+    });
+
+    renderCalendar(current);
+  </script>
+  <script src="utils.js"></script>
+</body>
+</html>

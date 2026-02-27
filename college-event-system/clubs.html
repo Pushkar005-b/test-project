@@ -3,73 +3,636 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Clubs — JISSP Campus Clubs</title>
+  <title>Clubs — JISSP Student Organizations</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    .clubs-hero {
+      padding: 60px 0;
+      background: linear-gradient(135deg, var(--bg), rgba(45, 0, 82, 0.3));
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .clubs-hero h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .clubs-hero p {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .clubs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .club-card {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .club-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow);
+    }
+
+    .club-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .club-content {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .club-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .club-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .club-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+      flex: 1;
+    }
+
+    .club-category {
+      display: inline-block;
+      padding: 4px 8px;
+      background: rgba(99, 102, 241, 0.1);
+      color: #6366f1;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .club-description {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    .club-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--glass-border);
+      font-size: 13px;
+    }
+
+    .club-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .club-stat-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .club-stat-value {
+      color: var(--text);
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .club-events {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .club-events strong {
+      color: var(--text);
+    }
+
+    .club-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .club-actions button,
+    .club-actions a {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .btn-join {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+    }
+
+    .btn-join:hover {
+      transform: translateX(2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-events {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+    }
+
+    .btn-events:hover {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: #6366f1;
+    }
+
+    .section-heading {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      margin-top: 0;
+    }
+
+    .club-section {
+      margin-bottom: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .clubs-grid { grid-template-columns: 1fr; }
+      .clubs-hero h1 { font-size: 32px; }
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <h1>JISSP Clubs</h1>
-    <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="calendar.html">Calendar</a>
-      <a class="active" href="clubs.html">Clubs</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="signin.html">Sign In</a>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <span class="logo-mark">⚙️</span>
+      <span class="logo-text">JISSP</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Events</a></li>
+      <li><a href="calendar.html">Calendar</a></li>
+      <li><a href="clubs.html" class="active">Clubs</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+    </ul>
+    <div class="nav-actions">
       <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
-    </nav>
-  </header>
+      <a class="btn-ghost" href="signin.html">Sign In</a>
+      <button class="btn-primary" id="myRegistrationsBtn">
+        My Registrations <span class="reg-badge" id="regBadge">0</span>
+      </button>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
 
-  <main class="container">
-    <section class="card">
-      <h2>Student Clubs</h2>
-      <div class="search-wrapper">
-        <input type="text" id="searchClubs" class="search-input" placeholder="🔍 Search clubs...">
-      </div>
-      <div class="grid clubs-grid">
-        <article class="club">
-          <img src="https://via.placeholder.com/320x180?text=Robotics+Club" alt="Robotics Club">
-          <h3>Robotics & Automation</h3>
-          <p>Build and program robots for competitions. Learn mechanical design, coding, and problem-solving.</p>
-          <button class="btn">Join</button>
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Events</a></li>
+      <li><a href="calendar.html">Calendar</a></li>
+      <li><a href="clubs.html">Clubs</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="signin.html">Sign In</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO SECTION -->
+  <div class="clubs-hero">
+    <h1>🎓 Student Clubs & Organizations</h1>
+    <p>Join passionate communities and explore your interests with JISSP's vibrant club network</p>
+  </div>
+
+  <main class="container" style="padding: 0 20px;">
+    <!-- TECHNICAL CLUBS -->
+    <section class="club-section">
+      <h2 class="section-heading">💻 Technical & Engineering Clubs</h2>
+      <div class="clubs-grid">
+        <!-- Robotics Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=200&fit=crop" alt="Robotics Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">🤖</span>
+              <h3 class="club-name">Robotics & Automation</h3>
+            </div>
+            <span class="club-category">Engineering</span>
+            <p class="club-description">Build robots, learn automation, and compete in national competitions. Perfect for mechanical and electronics enthusiasts.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">145</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2020</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> Robotics Competition, JISSP Hackathon</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
         </article>
 
-        <article class="club">
-          <img src="https://via.placeholder.com/320x180?text=Electronics+Club" alt="Electronics Club">
-          <h3>Electronics & IoT Club</h3>
-          <p>Explore PCB design, embedded systems, and IoT projects. Weekly hands-on workshops sessions.</p>
-          <button class="btn">Join</button>
+        <!-- Electronics & IoT Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1517746712202-14dd9538aa97?w=400&h=200&fit=crop" alt="Electronics & IoT Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">⚡</span>
+              <h3 class="club-name">Electronics & IoT</h3>
+            </div>
+            <span class="club-category">Technology</span>
+            <p class="club-description">Explore microcontrollers, IoT devices, and smart systems. Work on real-world IoT projects and innovations.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">132</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2019</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> IoT Bootcamp, Electronics Workshop</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
         </article>
 
-        <article class="club">
-          <img src="https://via.placeholder.com/320x180?text=CSE+Club" alt="CSE Club">
-          <h3>Programming & AI Club</h3>
-          <p>Competitive coding, web dev, and AI/ML projects. Mentorship from industry experts included.</p>
-          <button class="btn">Join</button>
+        <!-- Programming & AI Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=200&fit=crop" alt="AI Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">🤖</span>
+              <h3 class="club-name">Programming & AI Club</h3>
+            </div>
+            <span class="club-category">Software</span>
+            <p class="club-description">Master programming, machine learning, and AI. Participate in hackathons and coding competitions.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">187</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2018</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> JISSP Hackathon, Code Sprint</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
         </article>
 
-        <article class="club">
-          <img src="https://via.placeholder.com/320x180?text=Civil+Club" alt="Civil Club">
-          <h3>Civil Engineering Projects</h3>
-          <p>Design and build infrastructure models. Learn CAD, structural analysis, and field surveying.</p>
-          <button class="btn">Join</button>
+        <!-- Cybersecurity Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1550439062-7a3fb3ce53de?w=400&h=200&fit=crop" alt="Cybersecurity Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">🔐</span>
+              <h3 class="club-name">Cybersecurity & Hacking</h3>
+            </div>
+            <span class="club-category">Security</span>
+            <p class="club-description">Learn ethical hacking, network security, and penetration testing. Compete in CTF competitions.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">98</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2021</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> CyberSec CTF, Security Workshop</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
         </article>
 
-        <article class="club">
-          <img src="https://via.placeholder.com/320x180?text=Eco+Club" alt="Eco Club">
-          <h3>Eco & Sustainability Club</h3>
-          <p>Green campus initiatives, tree planting, and environmental awareness campaigns throughout the year.</p>
-          <button class="btn">Join</button>
+        <!-- Web Development Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=200&fit=crop" alt="Web Dev Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">🌐</span>
+              <h3 class="club-name">Web Development Club</h3>
+            </div>
+            <span class="club-category">Web</span>
+            <p class="club-description">Build modern web applications using latest frameworks. Learn frontend and backend development.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">156</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2019</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> Web Workshop, Dev Bootcamp</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
         </article>
 
-        <article class="club">
-          <img src="https://via.placeholder.com/320x180?text=Cultural+Club" alt="Cultural Club">
-          <h3>Cultural & Arts Club</h3>
-          <p>Drama, dance, music, and art exhibitions. Perform at fests and campus celebrations.</p>
-          <button class="btn">Join</button>
+        <!-- Data Science Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=200&fit=crop" alt="Data Science Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">📊</span>
+              <h3 class="club-name">Data Science Club</h3>
+            </div>
+            <span class="club-category">Analytics</span>
+            <p class="club-description">Analyze big data, create visualizations, and build predictive models using Python and R.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">124</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2020</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> Data Analytics Workshop</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
         </article>
       </div>
     </section>
+
+    <!-- NON-TECHNICAL CLUBS -->
+    <section class="club-section">
+      <h2 class="section-heading">🎨 Cultural & Professional Clubs</h2>
+      <div class="clubs-grid">
+        <!-- Cultural & Arts Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=200&fit=crop" alt="Cultural Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">🎭</span>
+              <h3 class="club-name">Cultural & Arts Club</h3>
+            </div>
+            <span class="club-category">Arts</span>
+            <p class="club-description">Celebrate diversity through dance, music, drama, and art. Organize cultural fests and performances.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">210</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2017</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> TechnoFest, Music Festival, Dance Night</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Sports Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&h=200&fit=crop" alt="Sports Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">⚽</span>
+              <h3 class="club-name">Sports & Fitness Club</h3>
+            </div>
+            <span class="club-category">Sports</span>
+            <p class="club-description">Organize and participate in sports events. Build a fitness culture and competitive spirit on campus.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">256</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2016</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> Annual Sports Meet, Football Tournament</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Environmental Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1559027615-cd2628902d4a?w=400&h=200&fit=crop" alt="Environmental Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">🌿</span>
+              <h3 class="club-name">Environmental Club</h3>
+            </div>
+            <span class="club-category">Sustainability</span>
+            <p class="club-description">Promote sustainability and environmental awareness. Organize tree planting and green drives.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">178</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2019</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> Green Drive, Tree Plantation, Eco Walk</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Entrepreneurship Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=200&fit=crop" alt="Entrepreneurship Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">💼</span>
+              <h3 class="club-name">Entrepreneurship Club</h3>
+            </div>
+            <span class="club-category">Business</span>
+            <p class="club-description">Learn business fundamentals, pitch ideas, and network with entrepreneurs and mentors.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">142</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2020</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> Startup Pitch, Business Workshop</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Debate & Public Speaking Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=200&fit=crop" alt="Debate Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">🎤</span>
+              <h3 class="club-name">Debate & Public Speaking</h3>
+            </div>
+            <span class="club-category">Communication</span>
+            <p class="club-description">Develop communication and critical thinking skills. Participate in debates and speaking competitions.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">95</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2018</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> Debate Competition, Speaker Series</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Photography Club -->
+        <article class="club-card">
+          <img class="club-image" src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=200&fit=crop" alt="Photography Club">
+          <div class="club-content">
+            <div class="club-header">
+              <span class="club-icon">📷</span>
+              <h3 class="club-name">Photography Club</h3>
+            </div>
+            <span class="club-category">Photography</span>
+            <p class="club-description">Capture moments through the lens. Learn photography techniques and exhibit your work.</p>
+            <div class="club-stats">
+              <div class="club-stat">
+                <span class="club-stat-label">Members</span>
+                <span class="club-stat-value">87</span>
+              </div>
+              <div class="club-stat">
+                <span class="club-stat-label">Founded</span>
+                <span class="club-stat-value">2018</span>
+              </div>
+            </div>
+            <div class="club-events"><strong>Organized:</strong> Photo Exhibition, Photography Workshop</div>
+            <div class="club-actions">
+              <button class="btn-join">Join Now</button>
+              <a href="#" class="btn-events">View Events</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
   </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-mark">⚙️</span>
+          <span class="logo-text">JISSP</span>
+        </div>
+        <p class="footer-copy">© 2025 JIS School of Polytechnic, Kalyani. Your Campus Event Hub. 📍 Block A, Phase III,
+          Kalyani, Nadia 741235.</p>
+      </div>
+    </div>
+  </footer>
+
   <script src="utils.js"></script>
+  <script>
+    // Update registration badge
+    function updateRegBadge() {
+      const regs = JSON.parse(localStorage.getItem('registrations') || '[]');
+      document.getElementById('regBadge').textContent = regs.length;
+    }
+    updateRegBadge();
+
+    // Setup hamburger menu
+    function setupHamburger() {
+      const btn = document.getElementById('hamburger');
+      const menu = document.getElementById('mobileMenu');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('open');
+          menu.classList.toggle('open');
+        });
+      }
+    }
+    setupHamburger();
+
+    // My Registrations button
+    const myRegBtn = document.getElementById('myRegistrationsBtn');
+    if (myRegBtn) {
+      myRegBtn.addEventListener('click', () => {
+        window.location.href = 'index.html#registrations';
+      });
+    }
+
+    initThemeToggle();
+  </script>
 </body>
 </html>

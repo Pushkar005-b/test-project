@@ -3,38 +3,388 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gallery — JISSP Campus Gallery</title>
+  <title>Gallery — JISSP Events & Campus</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    .gallery-hero {
+      padding: 60px 0;
+      background: linear-gradient(135deg, var(--bg), rgba(45, 0, 82, 0.3));
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .gallery-hero h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .gallery-hero p {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      cursor: pointer;
+      aspect-ratio: 4/3;
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.7));
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      color: white;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-item-overlay {
+      opacity: 1;
+    }
+
+    .gallery-item-overlay h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .gallery-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .gallery-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1200px) {
+      .gallery-grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .gallery-grid-2 { grid-template-columns: 1fr; }
+      .gallery-grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .gallery-hero h1 { font-size: 32px; }
+    }
+
+    .gallery-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery-modal.active {
+      display: flex;
+    }
+
+    .gallery-modal-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90vh;
+      background: var(--surface);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+    }
+
+    .gallery-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .gallery-modal img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      max-height: 90vh;
+    }
+
+    .section-heading {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      margin-top: 60px;
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <h1>JISSP Campus</h1>
-    <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="calendar.html">Calendar</a>
-      <a href="clubs.html">Clubs</a>
-      <a class="active" href="gallery.html">Gallery</a>
-      <a href="signin.html">Sign In</a>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <span class="logo-mark">⚙️</span>
+      <span class="logo-text">JISSP</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Events</a></li>
+      <li><a href="calendar.html">Calendar</a></li>
+      <li><a href="clubs.html">Clubs</a></li>
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+    </ul>
+    <div class="nav-actions">
       <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
-    </nav>
-  </header>
+      <a class="btn-ghost" href="signin.html">Sign In</a>
+      <button class="btn-primary" id="myRegistrationsBtn">
+        My Registrations <span class="reg-badge" id="regBadge">0</span>
+      </button>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
 
-  <main class="container">
-    <section class="card">
-      <h2>JISSP Campus & Events Gallery</h2>
-      <div class="search-wrapper">
-        <input type="text" id="searchGallery" class="search-input" placeholder="🔍 Search events...">
-      </div>
-      <div class="gallery-grid">
-        <img src="https://via.placeholder.com/400x300?text=Hackathon+2025" alt="JISSP Hackathon">
-        <img src="https://via.placeholder.com/400x300?text=TechnoFest" alt="TechnoFest">
-        <img src="https://via.placeholder.com/400x300?text=Sports+Meet" alt="Sports Meet">
-        <img src="https://via.placeholder.com/400x300?text=Lab+Session" alt="Lab Session">
-        <img src="https://via.placeholder.com/400x300?text=Campus+View" alt="Campus">
-        <img src="https://via.placeholder.com/400x300?text=Student+Projects" alt="Projects">
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Events</a></li>
+      <li><a href="calendar.html">Calendar</a></li>
+      <li><a href="clubs.html">Clubs</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="signin.html">Sign In</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO SECTION -->
+  <div class="gallery-hero">
+    <h1>📸 JISSP Campus Gallery</h1>
+    <p>Capture memories from our amazing events, campus life, and student achievements throughout the year</p>
+  </div>
+
+  <main class="container" style="padding: 0 20px;">
+    <!-- EVENT PHOTOS SECTION -->
+    <section>
+      <h2 class="section-heading">🎭 Event Highlights</h2>
+      <div class="gallery-container">
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=450&fit=crop" alt="Hackathon">
+          <div class="gallery-item-overlay"><h3>💻 Hackathon 2025</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=450&fit=crop" alt="TechnoFest">
+          <div class="gallery-item-overlay"><h3>🎭 TechnoFest</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=450&fit=crop" alt="Workshop">
+          <div class="gallery-item-overlay"><h3>📚 Workshops</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=450&fit=crop" alt="Sports">
+          <div class="gallery-item-overlay"><h3>⚽ Sports Meet</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1550439062-7a3fb3ce53de?w=600&h=450&fit=crop" alt="Security">
+          <div class="gallery-item-overlay"><h3>🔐 CyberSec CTF</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1559027615-cd2628902d4a?w=600&h=450&fit=crop" alt="Green Drive">
+          <div class="gallery-item-overlay"><h3>🌿 Green Drive</h3></div>
+        </div>
       </div>
     </section>
+
+    <!-- CULTURAL EVENTS SECTION -->
+    <section>
+      <h2 class="section-heading">🎵 Cultural Performances</h2>
+      <div class="gallery-container">
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&h=450&fit=crop" alt="Music">
+          <div class="gallery-item-overlay"><h3>🎵 Music Festival</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop" alt="Dance">
+          <div class="gallery-item-overlay"><h3>💃 Dance Night</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=600&h=450&fit=crop" alt="Drama">
+          <div class="gallery-item-overlay"><h3>🎬 Drama Show</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=450&fit=crop" alt="Fashion">
+          <div class="gallery-item-overlay"><h3>👗 Fashion Show</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1493286480902-f5c9a43850d5?w=600&h=450&fit=crop" alt="Art">
+          <div class="gallery-item-overlay"><h3>🎨 Art Exhibition</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=450&fit=crop" alt="Photography">
+          <div class="gallery-item-overlay"><h3>📷 Photo Exhibition</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAMPUS LIFE SECTION -->
+    <section>
+      <h2 class="section-heading">🏫 Campus Life</h2>
+      <div class="gallery-container">
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1427220776101-1f50ad620195?w=600&h=450&fit=crop" alt="Campus">
+          <div class="gallery-item-overlay"><h3>🏛️ Campus View</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=450&fit=crop" alt="Students">
+          <div class="gallery-item-overlay"><h3>👨‍🎓 Student Life</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1569163139394-de4798aa62b5?w=600&h=450&fit=crop" alt="Lab">
+          <div class="gallery-item-overlay"><h3>🔬 Lab Sessions</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1560264357-8d9766d54a08?w=600&h=450&fit=crop" alt="Classroom">
+          <div class="gallery-item-overlay"><h3>📖 Classroom</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=450&fit=crop" alt="Projects">
+          <div class="gallery-item-overlay"><h3>🛠️ Projects</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1523220527553-7a9fb2ffb9f4?w=600&h=450&fit=crop" alt="Library">
+          <div class="gallery-item-overlay"><h3>📚 Library</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS SECTION -->
+    <section>
+      <h2 class="section-heading">🏆 Achievements & Awards</h2>
+      <div class="gallery-container">
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1553531088-efc4b72a1cec?w=600&h=450&fit=crop" alt="Award">
+          <div class="gallery-item-overlay"><h3>🥇 Gold Medals</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1560264357-8d9766d54a08?w=600&h=450&fit=crop" alt="Trophy">
+          <div class="gallery-item-overlay"><h3>🏆 Trophies</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop" alt="Recognition">
+          <div class="gallery-item-overlay"><h3>🌟 Recognition</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=450&fit=crop" alt="Winners">
+          <div class="gallery-item-overlay"><h3>👏 Winners</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=450&fit=crop" alt="Certificates">
+          <div class="gallery-item-overlay"><h3>📜 Certificates</h3></div>
+        </div>
+        <div class="gallery-item" onclick="openModal(this)">
+          <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=450&fit=crop" alt="Celebration">
+          <div class="gallery-item-overlay"><h3>🎊 Celebrations</h3></div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- GALLERY MODAL -->
+  <div class="gallery-modal" id="galleryModal">
+    <button class="gallery-modal-close" onclick="closeModal()">✕</button>
+    <div class="gallery-modal-content">
+      <img id="modalImage" src="" alt="">
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-mark">⚙️</span>
+          <span class="logo-text">JISSP</span>
+        </div>
+        <p class="footer-copy">© 2025 JIS School of Polytechnic, Kalyani. Your Campus Event Hub. 📍 Block A, Phase III,
+          Kalyani, Nadia 741235.</p>
+      </div>
+    </div>
+  </footer>
+
   <script src="utils.js"></script>
+  <script>
+    function openModal(element) {
+      const img = element.querySelector('img');
+      document.getElementById('modalImage').src = img.src;
+      document.getElementById('galleryModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('galleryModal').classList.remove('active');
+    }
+
+    document.getElementById('galleryModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('galleryModal')) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    initThemeToggle();
+
+    function setupHamburger() {
+      const btn = document.getElementById('hamburger');
+      const menu = document.getElementById('mobileMenu');
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('open');
+        menu.classList.toggle('open');
+      });
+    }
+    setupHamburger();
+  </script>
 </body>
 </html>

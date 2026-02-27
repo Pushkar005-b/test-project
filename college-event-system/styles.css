@@ -28,6 +28,14 @@
   --shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --glass-blur: 16px;
+  /* Calendar variables */
+  --bg-primary: #0d0221;
+  --bg-secondary: rgba(26, 0, 51, 0.7);
+  --bg-tertiary: rgba(45, 0, 82, 0.3);
+  --text-primary: #ffffff;
+  --text-secondary: #a8a8d8;
+  --border-color: rgba(0, 217, 255, 0.2);
+  --accent-color: #00d9ff;
 }
 
 /* Light mode */
@@ -43,6 +51,14 @@
   --accent2: #e11d48;
   --accent3: #8b5cf6;
   --shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  /* Calendar variables */
+  --bg-primary: #f8fafc;
+  --bg-secondary: rgba(255, 255, 255, 0.75);
+  --bg-tertiary: rgba(226, 232, 240, 0.5);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: rgba(15, 23, 42, 0.08);
+  --accent-color: #0ea5e9;
 }
 
 html {
@@ -458,6 +474,12 @@ body::after {
   background: var(--bg);
 }
 
+.past-events-section {
+  padding: 64px 0;
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(45, 0, 82, 0.3) 100%);
+  border-top: 1px solid var(--border);
+}
+
 .section-header {
   display: flex;
   align-items: baseline;
@@ -548,6 +570,31 @@ body::after {
 .event-card.featured:hover {
   border-color: rgba(232, 255, 71, 0.35);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(232, 255, 71, 0.2);
+}
+
+/* ─── PAST EVENTS ─── */
+.event-card.past-event {
+  opacity: 0.7;
+  background: rgba(26, 0, 51, 0.5);
+}
+
+.event-card.past-event:hover {
+  opacity: 0.85;
+  transform: translateY(-3px);
+}
+
+.past-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(107, 114, 128, 0.3);
+  color: #9ca3af;
+  border: 1px solid rgba(107, 114, 128, 0.2);
 }
 
 .card-badge {

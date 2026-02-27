@@ -7,83 +7,168 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <h1>JISSP Events</h1>
-    <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a class="active" href="calendar.html">Calendar</a>
-      <a href="clubs.html">Clubs</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="signin.html">Sign In</a>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <span class="logo-mark">⚙️</span>
+      <span class="logo-text">JISSP</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Events</a></li>
+      <li><a href="calendar.html" class="active">Calendar</a></li>
+      <li><a href="clubs.html">Clubs</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+    </ul>
+    <div class="nav-actions">
       <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
-    </nav>
-  </header>
+      <a class="btn-ghost" href="signin.html">Sign In</a>
+      <button class="btn-primary" id="myRegistrationsBtn">
+        My Registrations <span class="reg-badge" id="regBadge">0</span>
+      </button>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
 
-  <main class="container">
-    <section class="card">
-      <h2>Event Calendar</h2>
-      <div class="search-wrapper">
-        <input type="text" id="searchCalendar" class="search-input" placeholder="🔍 Search events...">
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Events</a></li>
+      <li><a href="calendar.html">Calendar</a></li>
+      <li><a href="clubs.html">Clubs</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="signin.html">Sign In</a></li>
+    </ul>
+  </div>
+
+  <main class="container" style="padding: 40px 20px;">
+    <section>
+      <div class="section-header" style="margin-bottom: 40px;">
+        <h1 class="section-title">📅 Event Calendar</h1>
+        <p style="color: var(--text-secondary); margin-top: 10px;">View all upcoming and past events</p>
       </div>
-        <button id="prevBtn" class="btn small">◀</button>
-        <h2 id="monthYear"></h2>
-        <button id="nextBtn" class="btn small">▶</button>
+
+      <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+        <button id="prevBtn" class="btn-primary" style="padding: 10px 20px;">← Previous</button>
+        <h2 id="monthYear" style="flex: 1; text-align: center; align-self: center; color: var(--text-primary);">January 2026</h2>
+        <button id="nextBtn" class="btn-primary" style="padding: 10px 20px;">Next →</button>
       </div>
-      <table id="calendar" class="calendar"></table>
+
+      <div style="overflow-x: auto;">
+        <table id="calendar" class="calendar" style="width: 100%; border-collapse: collapse; margin-bottom: 40px;"></table>
+      </div>
+
+      <!-- Event List for selected month -->
+      <section style="margin-top: 50px;">
+        <h2 style="margin-bottom: 20px; color: var(--text-primary);">Events in <span id="selectedMonth">January</span> 2026</h2>
+        <div id="monthEvents" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+          <p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">Loading events...</p>
+        </div>
+      </section>
     </section>
   </main>
 
-  <script>
-    const calendarEl = document.getElementById('calendar');
-    const monthYearEl = document.getElementById('monthYear');
-    let current = new Date();
+  <!-- ── EVENT DETAIL MODAL ── -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-image" id="modalImage">
+        <span class="modal-icon" id="modalIcon"></span>
+      </div>
+      <div class="modal-body">
+        <div class="modal-tags">
+          <span class="modal-badge" id="modalBadge"></span>
+          <span class="modal-status" id="modalStatus"></span>
+        </div>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-desc" id="modalDesc"></p>
 
-    function renderCalendar(date) {
-      calendarEl.innerHTML = '';
-      const year = date.getFullYear();
-      const month = date.getMonth();
+        <!-- Live countdown inside modal -->
+        <div class="modal-countdown" id="modalCountdown">
+          <div class="mcd-block"><span class="mcd-num" id="mcdD">00</span><span class="mcd-lbl">Days</span></div>
+          <div class="mcd-sep">:</div>
+          <div class="mcd-block"><span class="mcd-num" id="mcdH">00</span><span class="mcd-lbl">Hrs</span></div>
+          <div class="mcd-sep">:</div>
+          <div class="mcd-block"><span class="mcd-num" id="mcdM">00</span><span class="mcd-lbl">Min</span></div>
+          <div class="mcd-sep">:</div>
+          <div class="mcd-block"><span class="mcd-num" id="mcdS">00</span><span class="mcd-lbl">Sec</span></div>
+        </div>
 
-      const firstDay = new Date(year, month, 1).getDay();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
+        <div class="modal-details">
+          <div class="detail-row"><span class="detail-icon">📅</span>
+            <div><strong>Date</strong><span id="modalDate">—</span></div>
+          </div>
+          <div class="detail-row"><span class="detail-icon">⏰</span>
+            <div><strong>Time</strong><span id="modalTime">—</span></div>
+          </div>
+          <div class="detail-row"><span class="detail-icon">📍</span>
+            <div><strong>Venue</strong><span id="modalVenue">—</span></div>
+          </div>
+          <div class="detail-row"><span class="detail-icon">👥</span>
+            <div><strong>Organizer</strong><span id="modalOrg">—</span></div>
+          </div>
+          <div class="detail-row"><span class="detail-icon">💰</span>
+            <div><strong>Entry Fee</strong><span id="modalFee">—</span></div>
+          </div>
+        </div>
+        <div class="modal-spots-wrap">
+          <div class="modal-spots-label">
+            <span>Registration Progress</span>
+            <span id="modalSpotsText">—</span>
+          </div>
+          <div class="modal-spots-bar"><span id="modalSpotsBar" style="width:0%"></span></div>
+        </div>
+        <button class="btn-modal-register" id="modalRegisterBtn">Register Now →</button>
+      </div>
+    </div>
+  </div>
 
-      monthYearEl.textContent = date.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+  <!-- ── MY REGISTRATIONS SIDE PANEL ── -->
+  <div class="panel-overlay" id="panelOverlay">
+    <div class="panel" id="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">📋 My Registrations</h3>
+        <button class="panel-close" id="panelClose">✕</button>
+      </div>
+      <div id="statsDisplay" class="stats-display"></div>
+      <div class="panel-body" id="panelBody"></div>
+    </div>
+  </div>
 
-      const headerRow = document.createElement('tr');
-      ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
-        const th = document.createElement('th'); th.textContent = d; headerRow.appendChild(th);
-      });
-      calendarEl.appendChild(headerRow);
+  <!-- ── CUSTOM CONFIRMATION ALERT ── -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box" id="confirmBox">
+      <div class="confirm-anim" id="confirmAnim">🎉</div>
+      <h3 class="confirm-title" id="confirmTitle">You're Registered!</h3>
+      <p class="confirm-msg" id="confirmMsg"></p>
+      <div class="confirm-detail" id="confirmDetail"></div>
+      <div class="confirm-actions">
+        <button class="btn-confirm-ok" id="confirmOk">Awesome, thanks!</button>
+        <button class="btn-confirm-cancel" id="confirmCancel">Undo</button>
+      </div>
+    </div>
+  </div>
 
-      let row = document.createElement('tr');
-      for (let i=0;i<firstDay;i++) {
-        row.appendChild(document.createElement('td'));
-      }
-      for (let day=1; day<=daysInMonth; day++) {
-        if (row.children.length === 7) { calendarEl.appendChild(row); row = document.createElement('tr'); }
-        const td = document.createElement('td');
-        td.textContent = day;
-        // simple demo: mark 10th as sample event
-        if (day === 10) {
-          const evt = document.createElement('div'); evt.className = 'event'; evt.textContent = 'Sample Event';
-          td.appendChild(evt);
-        }
-        row.appendChild(td);
-      }
-      while (row.children.length < 7) row.appendChild(document.createElement('td'));
-      calendarEl.appendChild(row);
-    }
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
 
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      current.setMonth(current.getMonth() - 1);
-      renderCalendar(current);
-    });
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      current.setMonth(current.getMonth() + 1);
-      renderCalendar(current);
-    });
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-mark">⚙️</span>
+          <span class="logo-text">JISSP</span>
+        </div>
+        <p class="footer-copy">© 2025 JIS School of Polytechnic, Kalyani. Your Campus Event Hub. 📍 Block A, Phase III,
+          Kalyani, Nadia 741235.</p>
+      </div>
+    </div>
+  </footer>
 
-    renderCalendar(current);
-  </script>
   <script src="utils.js"></script>
+  <script src="app.js"></script>
+  <script src="calendar.js"></script>
 </body>
 </html>
